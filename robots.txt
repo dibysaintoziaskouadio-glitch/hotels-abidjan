@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dibysaintoziaskouadio-glitch.github.io/hotels-abidjan/sitemap.xml
