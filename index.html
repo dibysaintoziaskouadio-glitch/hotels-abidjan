@@ -2,225 +2,251 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout : nav fixe | hero (recherche + compteurs) | explorateur : filtres à gauche, cartes holographiques à droite | appel à l'inscription | sources
-   Thème volontairement sombre unique : ville lagunaire de nuit, néons cyan / magenta / violet */
+/* Layout : en-tête blanc | bandeau photo + barre de recherche (destination, dates, voyageurs) | atouts | filtres à gauche, liste de résultats à droite | adhésion | sources
+   Style comparateur de réservation : fond clair, cartes blanches horizontales, bleu marine + orange ivoirien */
 :root{
-  color-scheme:dark;
-  --bg:#05060F; --bg-2:#0A0D1F; --glass:rgba(18,24,56,.58); --glass-2:rgba(30,38,84,.55);
-  --line:rgba(130,160,255,.16); --line-2:rgba(130,160,255,.3);
-  --fg:#E9EDFF; --muted:#8E97C6;
-  --cyan:#3BE8FF; --magenta:#FF4FD8; --violet:#7B5CFF; --amber:#FFB547; --green:#3CF2A3; --red:#FF5C7A;
-  --grad:linear-gradient(110deg,var(--cyan),var(--violet) 45%,var(--magenta));
-  --f-display:"Unbounded","Sora",system-ui,sans-serif;
-  --f-body:"Sora",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:light;
+  --bg:#F2F3F6; --surface:#FFFFFF; --surface-2:#F6F7F9;
+  --line:#DEE1E7; --line-2:#C3C8D2;
+  --fg:#1B2340; --muted:#5B6176;
+  --brand:#1C2A55; --brand-2:#2A3C78;
+  --accent:#E0610E; --accent-h:#C4520A;
+  --link:#1A5FD0;
+  --green:#18794A; --green-bg:#E5F4EC; --amber:#94570A; --amber-bg:#FFF3DF; --red:#C62828; --star:#F2A20C;
+  --radius:16px; --shadow:0 1px 3px rgba(27,35,64,.08),0 2px 10px rgba(27,35,64,.05); --shadow-h:0 10px 28px rgba(27,35,64,.16);
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --gut-l:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14.5px;line-height:1.55;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
-a{color:var(--cyan)}
-:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:10px}
-svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:8px}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .num{font-variant-numeric:tabular-nums}
-.mono{font-family:var(--f-mono)}
-#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
-.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.mono{font-family:ui-monospace,"SFMono-Regular",Menlo,monospace}
+.wrap{position:relative;max-width:1240px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.glass{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
 
-/* Nav */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;border-bottom:1px solid var(--line);background:rgba(5,6,15,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.nav .wrap{display:flex;align-items:center;gap:14px;padding-block:14px}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.06em;text-decoration:none;color:var(--fg)}
-.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#05060F;box-shadow:0 0 24px rgba(123,92,255,.55)}
-.logo small{font-family:var(--f-mono);font-weight:400;font-size:10px;color:var(--muted);letter-spacing:.12em;display:block}
-.nav-links{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.nl{border:1px solid transparent;background:none;border-radius:999px;padding:8px 14px;color:var(--muted);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;text-decoration:none}
-.nl:hover{color:var(--fg);border-color:var(--line)}
-.nl[aria-pressed="true"]{color:var(--fg);border-color:var(--line-2);background:var(--glass-2)}
-.cnt{font-family:var(--f-mono);font-size:11px;background:var(--glass-2);border:1px solid var(--line-2);border-radius:999px;padding:0 7px}
-.cta{border:0;border-radius:999px;padding:10px 18px;background:var(--grad);background-size:200% 100%;color:#05060F;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 8px 30px rgba(123,92,255,.4);transition:background-position .5s,transform .2s}
-.cta:hover{background-position:100% 0;transform:translateY(-1px)}
-.acct{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--glass-2);border-radius:999px;padding:5px 14px 5px 5px;font-size:13px;font-weight:600}
-.acct .av{width:28px;height:28px;border-radius:50%;background:var(--grad);color:#05060F;display:grid;place-items:center;font-family:var(--f-display);font-size:11px;font-weight:800}
+/* En-tête */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.01em;text-decoration:none;color:var(--brand)}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.logo small{font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em;display:block;line-height:1}
+.nav-links{margin-left:auto;display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.nl{border:0;background:none;border-radius:999px;padding:9px 14px;color:var(--fg);font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;text-decoration:none}
+.nl:hover{background:var(--surface-2)}
+.nl[aria-pressed="true"]{background:#E8EDFB;color:var(--brand-2)}
+.cnt{font-size:12px;background:var(--brand);color:#fff;border-radius:999px;padding:0 7px;min-width:20px;text-align:center}
+.cta{border:0;border-radius:999px;padding:11px 20px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;text-decoration:none}
+.cta:hover{background:var(--accent-h)}
+.cta:disabled{opacity:.6;cursor:default}
+.acct{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;font-weight:600}
+.acct .av{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
 
-/* Hero */
-.hero{padding-block:64px 36px;display:flex;flex-direction:column;gap:22px}
-.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(60,242,163,.6);animation:pulse 2s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(60,242,163,0)}100%{box-shadow:0 0 0 0 rgba(60,242,163,0)}}
-.hero h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(32px,6.4vw,76px);line-height:1.02;letter-spacing:-.02em;text-wrap:balance;max-width:14ch}
-.hero h1 .holo{background:var(--grad);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holo 6s ease-in-out infinite alternate}
-@keyframes holo{to{background-position:100% 0}}
-.hero p.lead{margin:0;color:var(--muted);font-size:16px;max-width:58ch}
-.searchbar{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto;gap:8px;padding:8px;border-radius:20px;max-width:900px;position:relative}
-.searchbar::before{content:"";position:absolute;inset:-1px;border-radius:21px;padding:1px;background:var(--grad);background-size:200% 100%;animation:holo 4s linear infinite alternate;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.7}
-.field{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(5,6,15,.5);min-width:0}
-.field input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:15px}
-.field label{display:flex;flex-direction:column;min-width:0;flex:1}
-.field small{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
-.field .dates{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:0;background:none;padding:0;text-align:left}
-.field svg{color:var(--cyan)}
-.counters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;max-width:900px}
-.counter{border-radius:16px;padding:14px 16px;position:relative;overflow:hidden}
-.counter b{display:block;font-family:var(--f-display);font-size:26px;font-weight:600}
-.counter span{font-size:12px;color:var(--muted)}
-.counter::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--grad);opacity:.7}
+/* Bandeau + recherche */
+.hero{position:relative;background:var(--brand) center/cover no-repeat;color:#fff;padding-block:56px 92px}
+.hero h1{margin:0;font-weight:800;font-size:clamp(28px,4.6vw,48px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance;max-width:20ch}
+.hero p.lead{margin:12px 0 0;font-size:17px;max-width:56ch;color:rgba(255,255,255,.9)}
+.hero .credit{position:absolute;right:var(--gut-r);top:10px;font-size:11px;color:rgba(255,255,255,.75)}
+.hero .credit a{color:inherit}
+.search-wrap{margin-top:-64px;position:relative;z-index:5}
+.searchbar{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1.1fr) minmax(0,.9fr) auto;gap:8px;padding:10px;border-radius:20px;background:var(--surface);box-shadow:0 12px 36px rgba(27,35,64,.18)}
+.field{position:relative;display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:12px;border:1px solid var(--line-2);min-width:0;background:var(--surface)}
+.field:focus-within{border-color:var(--link);box-shadow:0 0 0 3px rgba(26,95,208,.15)}
+.field>svg{color:var(--brand)}
+.field label,.field .fl{display:flex;flex-direction:column;min-width:0;flex:1}
+.field small{font-size:12px;color:var(--muted);font-weight:500}
+.field input{border:0;background:none;outline:none;font-size:15px;font-weight:600;padding:0;min-width:0}
+.fbtn{border:0;background:none;padding:0;text-align:left;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbtn:focus-visible{outline:none}
+.search-go{border-radius:12px;padding-inline:28px;font-size:16px}
+.pop{position:absolute;top:calc(100% + 10px);left:0;z-index:20;width:min(340px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-h);padding:16px;cursor:default}
+.pop-sm{width:min(300px,calc(100vw - 32px))}
+.pop .btnrow{margin-top:14px;justify-content:flex-end}
 
-/* Explorer */
-.explorer{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;padding-block:28px 40px;align-items:start}
-.panel{border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:20px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 82px)}
-.ph{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin:0 0 10px}
+.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-block:22px 4px}
+.counter{border-radius:14px;padding:14px 16px}
+.counter b{display:block;font-size:24px;font-weight:800;color:var(--brand)}
+.counter span{font-size:13px;color:var(--muted)}
+
+/* Résultats */
+.explorer{display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;padding-block:24px 40px;align-items:start}
+.panel{border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:22px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px)}
+.panel h2{margin:0;font-size:17px;font-weight:700}
+.ph{font-size:14px;font-weight:700;margin:0 0 10px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);background:rgba(5,6,15,.4);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.2s}
-.chip:hover{color:var(--fg);border-color:var(--line-2)}
-.chip[aria-pressed="true"]{color:#05060F;background:var(--cyan);border-color:var(--cyan);font-weight:600;box-shadow:0 0 18px rgba(59,232,255,.45)}
-.chip .n{font-family:var(--f-mono);font-size:11px;opacity:.75}
-.range-row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
-.range-row output{font-family:var(--f-mono);color:var(--cyan)}
-input[type=range]{width:100%;accent-color:var(--magenta)}
-.sel{width:100%;border:1px solid var(--line);background:rgba(5,6,15,.5);border-radius:12px;padding:9px 12px;outline:none}
+.chip{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;display:flex;align-items:center;gap:6px;transition:.15s}
+.chip:hover{border-color:var(--brand)}
+.chip[aria-pressed="true"]{color:#fff;background:var(--brand);border-color:var(--brand);font-weight:600}
+.chip .n{font-size:12px;opacity:.7}
+.range-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.range-row output{font-size:13px;font-weight:600;color:var(--brand-2)}
+input[type=range]{width:100%;accent-color:var(--brand-2)}
+.sel{border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:9px 12px;outline:none;font-weight:600;font-size:14px}
+.sort-box{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+
 .cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.cal-h h3{margin:0;font-size:13.5px;font-weight:600;text-transform:capitalize}
-.cal-nav{display:flex}
-.cal-nav button{border:0;background:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--muted)}
-.cal-nav button:hover:not(:disabled){color:var(--cyan)}
+.cal-h h3{margin:0;font-size:15px;font-weight:700;text-transform:capitalize}
+.cal-nav{display:flex;gap:4px}
+.cal-nav button{border:1px solid var(--line);background:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center}
+.cal-nav button:hover:not(:disabled){border-color:var(--brand)}
 .cal-nav button:disabled{opacity:.3;cursor:default}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);text-align:center}
-.cal .wd{font-family:var(--f-mono);font-size:9.5px;color:var(--muted);padding:3px 0}
-.cal button{border:0;background:none;height:32px;font-size:12px;font-variant-numeric:tabular-nums;padding:0}
-.cal button span{display:grid;place-items:center;width:28px;height:28px;margin:auto;border-radius:50%;transition:.15s}
-.cal button:hover:not(:disabled) span{background:var(--glass-2)}
-.cal button:disabled{opacity:.25;cursor:default}
+.cal .wd{font-size:11px;font-weight:600;color:var(--muted);padding:4px 0}
+.cal button{border:0;background:none;height:38px;font-size:13.5px;font-variant-numeric:tabular-nums;padding:0}
+.cal button span{display:grid;place-items:center;width:34px;height:34px;margin:auto;border-radius:50%;transition:.12s}
+.cal button:hover:not(:disabled) span{box-shadow:inset 0 0 0 1px var(--brand)}
+.cal button:disabled{opacity:.3;cursor:default}
 .cal button.out{color:var(--muted)}
-.cal button.in{background:rgba(123,92,255,.22)}
-.cal button.start{background:linear-gradient(90deg,transparent 50%,rgba(123,92,255,.22) 50%)}
-.cal button.end{background:linear-gradient(90deg,rgba(123,92,255,.22) 50%,transparent 50%)}
+.cal button.in{background:#E8EDFB}
+.cal button.start{background:linear-gradient(90deg,transparent 50%,#E8EDFB 50%)}
+.cal button.end{background:linear-gradient(90deg,#E8EDFB 50%,transparent 50%)}
 .cal button.start.end{background:none}
-.cal button.start span,.cal button.end span{background:var(--grad)!important;color:#05060F;font-weight:700;box-shadow:0 0 14px rgba(255,79,216,.5)}
-.cal button.today span{box-shadow:inset 0 0 0 1px var(--amber)}
-.hint{font-size:11.5px;color:var(--muted);margin:6px 0 0}
-.stepper{display:flex;align-items:center;justify-content:space-between;font-size:13px}
-.stepper div{display:flex;align-items:center;gap:10px}
-.stepper button{width:30px;height:30px;border-radius:10px;border:1px solid var(--line-2);background:rgba(5,6,15,.5);font-weight:700}
+.cal button.start span,.cal button.end span{background:var(--brand)!important;color:#fff;font-weight:700}
+.cal button.today span{font-weight:800;text-decoration:underline}
+.hint{font-size:13px;color:var(--muted);margin:8px 0 0}
+.stepper{display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:600}
+.stepper div{display:flex;align-items:center;gap:14px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);font-weight:700;font-size:17px;line-height:1}
+.stepper button:hover{border-color:var(--brand)}
 
-.res-h{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.res-h h2{margin:0;font-family:var(--f-display);font-size:22px;font-weight:600}
-.res-h p{margin:2px 0 0;color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.card{border-radius:20px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s;animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 45ms)}
-@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}}
-.card:hover{transform:translateY(-6px);border-color:var(--line-2);box-shadow:0 20px 50px -20px rgba(123,92,255,.6),0 0 0 1px rgba(59,232,255,.15)}
-.thumb{height:150px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:12px 14px}
-.thumb .sky{position:absolute;inset:auto 0 0;width:100%;height:72%;opacity:.4}
-.thumb .scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0,rgba(255,255,255,.18) 50%,transparent 100%);height:40%;transform:translateY(-120%);transition:none}
-.card:hover .scan{animation:scan 1.1s ease-out}
-@keyframes scan{to{transform:translateY(320%)}}
-.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
-.card:hover .photo{transform:scale(1.06)}
-.has-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,15,.35) 0,transparent 35%,transparent 55%,rgba(5,6,15,.75) 100%);pointer-events:none}
+.res-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.res-h h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.01em}
+.res-h p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.list{display:flex;flex-direction:column;gap:16px}
+.card{display:grid;grid-template-columns:270px minmax(0,1fr);border-radius:var(--radius);overflow:hidden;position:relative;transition:box-shadow .2s;animation:rise .4s ease-out both;animation-delay:calc(var(--i,0) * 30ms)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.card:hover{box-shadow:var(--shadow-h)}
+.thumb{position:relative;min-height:210px;overflow:hidden;display:grid;place-items:center}
+.thumb .sky,.d-hero .sky{position:absolute;inset:auto 0 0;width:100%;height:60%;opacity:.18}
+.scan{display:none}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.card:hover .photo{transform:scale(1.04)}
 .has-photo .tag,.has-photo .fav,.has-photo h2,.has-photo .x{z-index:1}
-.thumb .ini{position:relative;font-family:var(--f-display);font-weight:800;font-size:28px;color:rgba(255,255,255,.92);letter-spacing:.04em;text-shadow:0 0 18px rgba(0,0,0,.35)}
-.tag{position:absolute;top:12px;left:12px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;background:rgba(5,6,15,.6);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:3px 9px;color:#fff;text-transform:uppercase}
-.fav{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(5,6,15,.55);color:#fff;display:grid;place-items:center;transition:transform .2s}
+.d-hero.has-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(10,14,30,.75));pointer-events:none}
+.thumb .ini{position:relative;font-weight:800;font-size:38px;color:rgba(255,255,255,.95);letter-spacing:.02em}
+.tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;background:rgba(255,255,255,.95);color:var(--fg);border-radius:999px;padding:3px 10px}
+.fav{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:var(--fg);display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .15s}
 .fav:hover{transform:scale(1.08)}
-.fav[aria-pressed="true"]{color:var(--magenta);border-color:var(--magenta);box-shadow:0 0 16px rgba(255,79,216,.5)}
+.fav[aria-pressed="true"]{color:#E0245E}
 .fav[aria-pressed="true"] svg{fill:currentColor}
-.cbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
-.cname{margin:0;font-size:15px;font-weight:600;line-height:1.3}
-.stars{color:var(--amber);font-size:12px;letter-spacing:2px}
-.addr{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:flex-start}
-.addr svg{width:14px;height:14px;margin-top:3px;color:var(--cyan)}
-.tel{font-family:var(--f-mono);font-size:12px;color:var(--fg);opacity:.85}
-.cfoot{margin-top:auto;display:flex;align-items:end;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px dashed var(--line)}
-.price small{display:block;font-size:11px;color:var(--muted)}
-.price b{font-family:var(--f-display);font-size:17px;font-weight:600}
-.price em{font-style:normal;font-size:11px;color:var(--muted);display:block}
-.badge{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;border-radius:999px;padding:2px 8px;display:inline-block;margin-bottom:4px}
-.b-ok{color:var(--green);border:1px solid rgba(60,242,163,.4);background:rgba(60,242,163,.08)}
-.b-dir{color:var(--amber);border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08)}
-.go{border:1px solid var(--line-2);background:rgba(5,6,15,.5);border-radius:12px;padding:8px 12px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.go:hover{border-color:var(--cyan);color:var(--cyan)}
-.empty{border:1px dashed var(--line-2);border-radius:20px;padding:36px;text-align:center;color:var(--muted)}
+.cbody{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:16px 18px}
+.cmain{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cname{margin:0;font-size:19px;font-weight:700;line-height:1.25}
+.loc{font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stars{color:var(--star);font-size:13px;letter-spacing:1px}
+.addr{font-size:14px;color:var(--muted);display:flex;gap:6px;align-items:flex-start}
+.addr svg{width:15px;height:15px;margin-top:3px}
+.feats{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.feats li{display:flex;align-items:center;gap:6px}
+.feats svg{width:16px;height:16px}
+.f-ok{color:var(--green)}
+.f-dir{color:var(--amber)}
+.tel{font-size:13.5px;color:var(--fg);margin-top:auto;padding-top:6px}
+.cside{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;text-align:right;gap:12px;padding-left:18px;border-left:1px solid var(--line);min-width:180px}
+.price small{display:block;font-size:13px;color:var(--muted)}
+.price b{display:block;font-size:24px;font-weight:800;line-height:1.15}
+.price b.ask{font-size:17px}
+.price em{font-style:normal;font-size:13px;color:var(--muted);display:block}
+.price em.tot{color:var(--fg);font-weight:600}
+.badge{font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:6px}
+.b-ok{color:var(--green);background:var(--green-bg)}
+.b-dir{color:var(--amber);background:var(--amber-bg)}
+.go{border:0;background:var(--accent);color:#fff;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.go:hover{background:var(--accent-h)}
+.empty{background:var(--surface);border:1px dashed var(--line-2);border-radius:var(--radius);padding:36px;text-align:center;color:var(--muted)}
 
-/* Join */
-.join{margin-block:20px 40px;border-radius:28px;padding:clamp(22px,4vw,44px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:center;position:relative;overflow:hidden}
-.join::before{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,216,.35),transparent 65%);filter:blur(10px);animation:float 9s ease-in-out infinite alternate}
-@keyframes float{to{transform:translate(-60px,60px)}}
-.join h2{margin:0 0 10px;font-family:var(--f-display);font-size:clamp(22px,3.4vw,36px);font-weight:800;line-height:1.1;text-wrap:balance;position:relative}
-.join p{margin:0;color:var(--muted);position:relative}
-.perks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;position:relative}
-.perks li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(5,6,15,.45);border:1px solid var(--line);font-size:13.5px}
-.perks svg{color:var(--cyan);margin-top:2px}
+/* Adhésion */
+.join{margin-block:8px 40px;border-radius:20px;padding:clamp(22px,4vw,40px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center;background:var(--brand);color:#fff;border:0}
+.join h2{margin:0 0 10px;font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.15;text-wrap:balance}
+.join p{margin:0;color:rgba(255,255,255,.85)}
+.join .msg.m-ok{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff}
+.perks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.perks li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.08);font-size:14px}
+.perks svg{color:#FFB37A;margin-top:2px}
 
-.sources{border-top:1px solid var(--line);padding-block:24px 40px;color:var(--muted);font-size:12px;display:flex;flex-direction:column;gap:6px}
+.sources{border-top:1px solid var(--line);padding-block:24px 40px;color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:6px}
 .sources b{color:var(--fg)}
 
-/* Overlays */
-.scrim{position:fixed;inset:0;background:rgba(3,4,12,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:50}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);z-index:51;overflow-y:auto;background:rgba(10,13,31,.94);border-left:1px solid var(--line-2);
-  padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:18px;animation:slidein .35s cubic-bezier(.2,.8,.2,1)}
-@keyframes slidein{from{transform:translateX(40px);opacity:.4}}
-.modal{position:fixed;z-index:51;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 32px));max-height:calc(100% - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;border-radius:24px;padding:24px;background:rgba(10,13,31,.96);border:1px solid var(--line-2);box-shadow:0 30px 80px -20px rgba(123,92,255,.55);animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+/* Fenêtres */
+.scrim{position:fixed;inset:0;background:rgba(15,20,40,.5);z-index:50}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(500px,100%);z-index:51;overflow-y:auto;background:var(--surface);box-shadow:-10px 0 40px rgba(0,0,0,.15);
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:18px;animation:slidein .3s ease-out}
+@keyframes slidein{from{transform:translateX(40px);opacity:.5}}
+.modal{position:fixed;z-index:51;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100% - 32px));max-height:calc(100% - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;border-radius:20px;padding:24px;background:var(--surface);box-shadow:0 24px 64px rgba(0,0,0,.25);animation:pop .3s ease-out}
 .modal.wide{width:min(900px,calc(100% - 32px))}
-@keyframes pop{from{transform:translate(-50%,-46%) scale(.96);opacity:0}}
-.x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:12px;border:1px solid var(--line-2);background:rgba(5,6,15,.6);color:var(--fg);display:grid;place-items:center;z-index:2}
-.modal h2{margin:0 0 6px;font-family:var(--f-display);font-size:22px;font-weight:600;padding-right:40px}
-.modal .sub{margin:0 0 18px;color:var(--muted);font-size:13.5px}
+@keyframes pop{from{transform:translate(-50%,-47%);opacity:0}}
+.x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:var(--fg);display:grid;place-items:center;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.modal h2{margin:0 0 6px;font-size:22px;font-weight:800;padding-right:44px}
+.modal .sub{margin:0 0 18px;color:var(--muted);font-size:14px}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form .full{grid-column:1/-1}
-.form label{display:flex;flex-direction:column;gap:6px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.form input,.form select{font-family:var(--f-body);font-size:14px;letter-spacing:0;text-transform:none;color:var(--fg);border:1px solid var(--line-2);background:rgba(5,6,15,.6);border-radius:12px;padding:11px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
-.form input:focus,.form select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(59,232,255,.15)}
-.check{flex-direction:row!important;align-items:flex-start;gap:10px!important;text-transform:none!important;letter-spacing:0!important;font-family:var(--f-body)!important;font-size:12.5px!important}
-.check input{margin-top:3px;accent-color:var(--magenta)}
-.msg{border-radius:12px;padding:10px 12px;font-size:13px}
-.m-err{background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.4);color:#FFB3C1}
-.m-ok{background:rgba(60,242,163,.08);border:1px solid rgba(60,242,163,.4);color:var(--green)}
-.m-info{background:rgba(59,232,255,.07);border:1px solid rgba(59,232,255,.3);color:#BDF6FF}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.form input,.form select{font-size:15px;font-weight:400;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:11px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
+.form input:focus,.form select:focus{border-color:var(--link);box-shadow:0 0 0 3px rgba(26,95,208,.15)}
+.check{flex-direction:row!important;align-items:flex-start;gap:10px!important;font-weight:400!important}
+.check input{margin-top:3px;accent-color:var(--brand)}
+.msg{border-radius:10px;padding:10px 12px;font-size:14px;border:1px solid transparent}
+.m-err{background:#FDECEC;border-color:#F5C2C2;color:var(--red)}
+.m-ok{background:var(--green-bg);border-color:#B7E0C8;color:var(--green)}
+.m-info{background:#E8EDFB;border-color:#C7D3F5;color:var(--brand-2)}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.ghost{border:1px solid var(--line-2);background:rgba(5,6,15,.5);border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600}
-.ghost.danger{color:var(--red);border-color:rgba(255,92,122,.45)}
-.d-hero{height:170px;border-radius:18px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:16px;flex:none}
-.d-hero .sky{position:absolute;inset:auto 0 0;width:100%;height:75%;opacity:.35}
-.d-hero h2{position:relative;margin:0;font-family:var(--f-display);font-size:21px;font-weight:600;text-wrap:balance;padding-right:40px}
-.sec-t{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin:0 0 10px}
-.rooms{width:100%;border-collapse:collapse;font-size:13px}
-.rooms td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
-.rooms td:last-child{text-align:right;font-weight:600;padding-left:12px}
-.ct{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;background:rgba(5,6,15,.5);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px}
-.ct svg{color:var(--cyan)}
-.ct .v{user-select:all;overflow-wrap:anywhere;font-weight:600;font-family:var(--f-mono);font-size:12.5px}
-.ct small{display:block;color:var(--muted);font-size:11.5px}
-.copy{border:1px solid var(--line-2);background:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600}
-.total{display:flex;justify-content:space-between;align-items:end;gap:12px;padding:14px;border-radius:14px;background:linear-gradient(110deg,rgba(59,232,255,.1),rgba(255,79,216,.1));border:1px solid var(--line-2)}
-.total b{font-family:var(--f-display);font-size:20px}
-.total span{font-size:12px;color:var(--muted)}
-.warn{background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.35);color:var(--amber);border-radius:12px;padding:10px 12px;font-size:12.5px}
-.note{font-size:11.5px;color:var(--muted);margin:0}
-.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
-.mtable{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
-.mtable th{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-2);font-weight:400}
+.ghost{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:10px 16px;font-size:14px;font-weight:600}
+.ghost.danger{color:var(--red);border-color:#F5C2C2}
+.d-hero{height:220px;margin:calc(-20px - env(safe-area-inset-top,0px)) -20px 0;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:18px 20px;flex:none}
+.d-hero h2{position:relative;margin:0;font-size:23px;font-weight:800;color:#fff;text-wrap:balance;padding-right:40px;text-shadow:0 1px 8px rgba(0,0,0,.3)}
+.sec-t{font-size:16px;font-weight:700;margin:0 0 10px}
+.rooms{width:100%;border-collapse:collapse;font-size:14px}
+.rooms td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rooms td:last-child{text-align:right;font-weight:700;padding-left:12px}
+.ct{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.ct svg{color:var(--brand)}
+.ct .v{user-select:all;overflow-wrap:anywhere;font-weight:600}
+.ct small{display:block;color:var(--muted);font-size:12.5px}
+.copy{border:1px solid var(--line-2);background:none;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+.total{display:flex;justify-content:space-between;align-items:end;gap:12px;padding:14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.total b{font-size:22px;font-weight:800}
+.total span{font-size:13px;color:var(--muted)}
+.warn{background:var(--amber-bg);border:1px solid #F3D59D;color:var(--amber);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.mtable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+.mtable th{font-size:12px;font-weight:700;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-2);background:var(--surface-2)}
 .mtable td{padding:10px 12px;border-bottom:1px solid var(--line)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;padding:12px 18px;border-radius:14px;background:rgba(10,13,31,.95);border:1px solid var(--cyan);box-shadow:0 0 30px rgba(59,232,255,.35);font-size:13.5px;animation:pop2 .3s ease-out;max-width:calc(100% - 32px)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;padding:12px 18px;border-radius:12px;background:var(--brand);color:#fff;box-shadow:var(--shadow-h);font-size:14px;animation:pop2 .3s ease-out;max-width:calc(100% - 32px)}
 @keyframes pop2{from{transform:translate(-50%,10px);opacity:0}}
 
 @media (max-width:980px){
   .explorer{grid-template-columns:minmax(0,1fr)}
   .panel{position:static}
   .join{grid-template-columns:minmax(0,1fr)}
+  .searchbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .field.f-dest{grid-column:1/-1}
+  .search-go{grid-column:1/-1;padding-block:13px}
 }
-@media (max-width:700px){
+@media (max-width:760px){
+  .card{grid-template-columns:minmax(0,1fr)}
+  .thumb{min-height:190px}
+  .cbody{grid-template-columns:minmax(0,1fr)}
+  .cside{flex-direction:row;align-items:flex-end;justify-content:space-between;text-align:left;border-left:0;border-top:1px solid var(--line);padding:12px 0 0;min-width:0}
+  .trust{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
   .searchbar{grid-template-columns:minmax(0,1fr)}
-  .counters{grid-template-columns:repeat(2,minmax(0,1fr))}
   .nl.hide-sm{display:none}
+  .nav-links{flex-wrap:nowrap;gap:2px}
+  .nl{padding:8px 10px}
+  .cta{padding:10px 14px}
   .logo small{display:none}
-  .hero{padding-block:36px 24px}
+  .hero{padding-block:36px 84px}
   .form{grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -229,13 +255,11 @@ input[type=range]{width:100%;accent-color:var(--magenta)}
 }
 </style>
 
-<canvas id="bg" aria-hidden="true"></canvas>
-
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="#top"><span class="logo-mark"><svg class="i" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span>AKWABA<small>HÔTELS · ABIDJAN</small></span></a>
+    <a class="logo" href="#top"><span class="logo-mark"><svg class="i" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg></span><span>Akwaba<small>Hôtels · Abidjan</small></span></a>
     <nav class="nav-links" aria-label="Navigation">
-      <a class="nl hide-sm" href="#explorer">Explorer</a>
+      <a class="nl hide-sm" href="#explorer">Hôtels</a>
       <button class="nl" id="nav-fav" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Favoris <span class="cnt num" id="fav-count">0</span></button>
       <button class="nl" id="nav-members" hidden><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>Inscrits <span class="cnt num" id="mem-count">0</span></button>
       <span id="acct-slot"><button class="cta" id="open-join">S'inscrire</button></span>
@@ -244,53 +268,68 @@ input[type=range]{width:100%;accent-color:var(--magenta)}
 </header>
 
 <main id="top">
-  <section class="wrap hero">
-    <div class="eyebrow"><span class="pulse"></span>Abidjan · 5°20′N 4°01′O · lagune Ébrié</div>
-    <h1>Votre hôtel à Abidjan, <span class="holo">en un instant.</span></h1>
-    <p class="lead">43 hôtels du Plateau à Bingerville, avec adresses, contacts et tarifs officiels de Côte d'Ivoire Tourisme. Inscrivez-vous pour garder vos favoris.</p>
-    <div class="searchbar glass">
-      <div class="field"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label for="q"><small>Hôtel, rue, commune</small><input id="q" type="search" placeholder="Ex. Plateau, Sofitel, Zone 4…" autocomplete="off"></label></div>
-      <div class="field"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><label><small>Dates</small><button class="dates num" id="dates-btn" type="button"></button></label></div>
-      <a class="cta" href="#explorer" style="justify-content:center;text-decoration:none">Rechercher <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <h1>Trouvez votre hôtel à Abidjan</h1>
+      <p class="lead">43 hôtels du Plateau à Bingerville, avec adresses, contacts et tarifs officiels de Côte d'Ivoire Tourisme.</p>
     </div>
-    <div class="counters" id="counters"></div>
+    <span class="credit" id="hero-credit"></span>
   </section>
+
+  <div class="wrap search-wrap">
+    <div class="searchbar" role="search">
+      <div class="field f-dest"><svg class="i" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><label for="q"><small>Où allez-vous ?</small><input id="q" type="search" placeholder="Commune, hôtel, rue…" autocomplete="off"></label></div>
+      <div class="field f-dates"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <div class="fl"><small>Dates</small><button class="fbtn num" id="dates-btn" type="button" aria-expanded="false" aria-controls="pop-dates"></button></div>
+        <div class="pop" id="pop-dates" hidden>
+          <div class="cal-h"><h3 id="cal-title"></h3><div class="cal-nav">
+            <button id="cal-prev" type="button" aria-label="Mois précédent"><svg class="i" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button id="cal-next" type="button" aria-label="Mois suivant"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div></div>
+          <div class="cal" id="cal"></div>
+          <p class="hint" id="cal-hint"></p>
+        </div>
+      </div>
+      <div class="field f-trav"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <div class="fl"><small>Chambres</small><button class="fbtn num" id="trav-btn" type="button" aria-expanded="false" aria-controls="pop-trav"></button></div>
+        <div class="pop pop-sm" id="pop-trav" hidden>
+          <div class="stepper"><span>Chambres</span><div><button id="r-minus" type="button" aria-label="Retirer une chambre">−</button><output id="r-val" class="num"></output><button id="r-plus" type="button" aria-label="Ajouter une chambre">+</button></div></div>
+          <div class="btnrow"><button class="cta" type="button" id="trav-ok">Terminé</button></div>
+        </div>
+      </div>
+      <button class="cta search-go" id="search-go" type="button">Rechercher</button>
+    </div>
+    <div class="trust" id="counters"></div>
+  </div>
 
   <section class="wrap explorer" id="explorer">
     <aside class="panel glass" aria-label="Filtres">
+      <h2>Filtrer par</h2>
       <div><p class="ph">Commune</p><div class="chips" id="communes"></div></div>
-      <div><p class="ph">Étoiles</p><div class="chips" id="stars"></div></div>
+      <div><p class="ph">Classement</p><div class="chips" id="stars"></div></div>
       <div>
-        <div class="range-row"><p class="ph" style="margin:0">Prix max / nuit</p><output id="maxp-out" class="num"></output></div>
+        <div class="range-row"><p class="ph" style="margin:0">Votre budget par nuit</p><output id="maxp-out" class="num"></output></div>
         <input id="maxp" type="range" min="50000" max="150000" step="5000" value="150000" aria-label="Prix maximum par nuit">
       </div>
-      <div><p class="ph">Trier</p>
-        <select class="sel" id="sort" aria-label="Trier"><option value="pa">Prix croissant</option><option value="pd">Prix décroissant</option><option value="stars">Étoiles</option><option value="name">Nom</option></select>
-      </div>
-      <div id="cal-box">
-        <p class="ph">Votre séjour</p>
-        <div class="cal-h"><h3 id="cal-title"></h3><div class="cal-nav">
-          <button id="cal-prev" aria-label="Mois précédent"><svg class="i" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
-          <button id="cal-next" aria-label="Mois suivant"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
-        </div></div>
-        <div class="cal" id="cal"></div>
-        <p class="hint" id="cal-hint"></p>
-      </div>
-      <div class="stepper"><span>Chambres</span><div><button id="r-minus" aria-label="Retirer une chambre">−</button><output id="r-val" class="num"></output><button id="r-plus" aria-label="Ajouter une chambre">+</button></div></div>
     </aside>
 
     <div>
-      <div class="res-h"><div><h2 id="res-title">Hôtels à Abidjan</h2><p id="res-sub"></p></div></div>
-      <div class="grid" id="grid"></div>
+      <div class="res-h">
+        <div><h2 id="res-title">Hôtels à Abidjan</h2><p id="res-sub"></p></div>
+        <label class="sort-box">Trier par
+          <select class="sel" id="sort"><option value="pa">Prix croissant</option><option value="pd">Prix décroissant</option><option value="stars">Étoiles</option><option value="name">Nom</option></select>
+        </label>
+      </div>
+      <div class="list" id="grid"></div>
     </div>
   </section>
 
   <section class="wrap">
-    <div class="join glass">
+    <div class="join">
       <div>
-        <h2>Rejoignez Akwaba</h2>
+        <h2>Inscrivez-vous, c'est gratuit</h2>
         <p>Créez votre profil voyageur en 30 secondes. Vos favoris vous suivent d'une visite à l'autre.</p>
-        <div class="btnrow" style="margin-top:18px;position:relative" id="join-actions"><button class="cta" data-open-join>Créer mon profil</button></div>
+        <div class="btnrow" style="margin-top:18px" id="join-actions"><button class="cta" data-open-join>Créer mon profil</button></div>
       </div>
       <ul class="perks">
         <li><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span>Favoris enregistrés sur votre compte, pas seulement dans ce navigateur</span></li>
@@ -302,7 +341,7 @@ input[type=range]{width:100%;accent-color:var(--magenta)}
 
   <footer class="wrap sources">
     <b>Sources des données</b>
-    <span>Tarifs (petit-déjeuner inclus), adresses et contacts de 16 hôtels : <a href="https://www.climate-chance.org/wp-content/uploads/2026/06/hotels-plateau-cocody-marcory.docx.pdf" target="_blank" rel="noopener">« Liste des hôtels de Cocody, Plateau, Marcory », Côte d'Ivoire Tourisme, juin 2026</a>. Vérifiée le 19 octobre 2026.</span>
+    <span>Tarifs (petit-déjeuner inclus), adresses et contacts de 16 hôtels : <a href="https://www.climate-chance.org/wp-content/uploads/2026/06/hotels-plateau-cocody-marcory.docx.pdf" target="_blank" rel="noopener noreferrer">« Liste des hôtels de Cocody, Plateau, Marcory », Côte d'Ivoire Tourisme, juin 2026</a>. Vérifiée le 19 octobre 2026.</span>
     <span>Le 19 octobre 2026, les téléphones et e-mails ont été comparés aux sites officiels des hôtels : 18 hôtels sur 43 ont un contact vérifié sur leur propre site. Les autres viennent de la liste officielle ou d'annuaires, comme indiqué dans chaque fiche.</span>
     <span>Photos de 8 hôtels : Wikimedia Commons, sous licences libres (CC0, CC BY, CC BY-SA). L'auteur et la licence figurent dans la fiche de chaque hôtel.</span>
     <span>Les tarifs changent selon les dates : confirmez toujours prix et disponibilité auprès de l'hôtel.</span>
@@ -322,6 +361,8 @@ const ICON = {
   arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
   phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
   web:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'
 };
 const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
@@ -444,13 +485,19 @@ const fmtD = d => d ? d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HOTEL_IDS = new Set(HOTELS.map(h => h.id));
+const PURPOSES = ['Affaires','Loisirs','Famille','Événement'];
+// Les fiches de la base sont écrites par les visiteurs : on ne garde que des textes courts aux champs attendus.
+const MEMBER_FIELDS = {firstName:60, lastName:60, email:120, phone:30, purpose:20, createdAt:40, updatedAt:40};
+const cleanMember = d => Object.fromEntries(Object.entries(MEMBER_FIELDS).map(([k,n]) => [k, typeof d?.[k]==='string' ? d[k].slice(0,n) : '']));
+const addFavs = a => { if (Array.isArray(a)) a.slice(0,100).forEach(id => { if (HOTEL_IDS.has(id)) S.favs.add(id); }); };
 
 const S = {
   q:'', commune:'Toutes', minStars:0, maxPrice:MAXP, sort:'pa', view:'all',
   checkin:addDays(today,5), checkout:addDays(today,8), rooms:1,
   month:new Date(today.getFullYear(), today.getMonth(), 1), favs:new Set()
 };
-try { JSON.parse(localStorage.getItem('akwaba-favs')||'[]').forEach(id => S.favs.add(id)); } catch(e){}
+try { addFavs(JSON.parse(localStorage.getItem('akwaba-favs')||'[]')); } catch(e){}
 const nights = () => S.checkin && S.checkout ? Math.round((S.checkout - S.checkin)/DAY) : 1;
 
 /* ---------- Compte : db + user ---------- */
@@ -470,18 +517,18 @@ async function initAccount(){
   ACC.owner = ACC.user ? await ACC.user.isOwner() : false;
   if (ACC.db && ACC.uid){
     ACC.db.doc('members/'+ACC.uid).onSnapshot(snap => {
-      ACC.member = snap.exists ? snap.data() : null;
+      ACC.member = snap.exists ? cleanMember(snap.data()) : null;
       renderAccount();
     }, () => {});
     try {
       const p = await ACC.db.doc('data/users/'+ACC.uid+'/prefs').get();
-      if (p.exists && Array.isArray(p.data().favs)) { p.data().favs.forEach(id => S.favs.add(id)); render(); }
+      if (p.exists) { addFavs(p.data().favs); render(); }
     } catch(e){}
   }
   if (ACC.owner && ACC.db){
     $('nav-members').hidden = false;
     ACC.db.collection('members').orderBy('createdAt','desc').onSnapshot(snap => {
-      ACC.members = snap.docs.map(d => ({id:d.id, ...d.data()}));
+      ACC.members = snap.docs.map(d => ({id:d.id, ...cleanMember(d.data())}));
       $('mem-count').textContent = ACC.members.length;
       if (!$('modal').hidden && $('modal').dataset.kind === 'members') openMembers();
     }, () => {});
@@ -501,7 +548,7 @@ function renderAccount(){
 }
 
 /* ---------- Rendu ---------- */
-function thumbBg(h){ const a=(h.id*47)%360; return `radial-gradient(120% 90% at 20% 0%,hsl(${a} 95% 62% / .95),transparent 60%),radial-gradient(100% 100% at 100% 100%,hsl(${(a+70)%360} 90% 55% / .9),transparent 60%),linear-gradient(135deg,#120f3a,#05060f)`; }
+function thumbBg(h){ const a=(h.id*47)%360; return `linear-gradient(135deg,hsl(${a} 42% 42%),hsl(${(a+40)%360} 48% 26%))`; }
 const SKY = '<svg class="sky" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path fill="#fff" d="M0 50V30h8V18h10v12h6V8h12v22h6V22h8v-8h10v16h6V12h12v18h8V26h14v24z"/></svg>';
 const initials = n => n.replace(/Hôtel|Hotel|Abidjan|Complexe/g,'').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
 const starTxt = h => h.stars ? `<span class="stars" aria-label="${h.stars} étoiles">${'★'.repeat(h.stars)}</span>` : '';
@@ -543,6 +590,7 @@ function renderFilters(){
   $('stars').innerHTML = [[0,'Toutes'],[3,'3★+'],[4,'4★+'],[5,'5★']].map(([v,l]) => `<button class="chip" data-stars="${v}" aria-pressed="${S.minStars===v}">${l}</button>`).join('');
   $('maxp-out').textContent = S.maxPrice>=MAXP ? 'Sans limite' : fcfa(S.maxPrice);
   $('r-val').textContent = S.rooms;
+  $('trav-btn').textContent = `${S.rooms} chambre${S.rooms>1?'s':''}`;
   $('dates-btn').textContent = `${fmtD(S.checkin)} → ${fmtD(S.checkout)} · ${nights()} nuit${nights()>1?'s':''}`;
   $('fav-count').textContent = S.favs.size;
   $('nav-fav').setAttribute('aria-pressed', S.view==='fav');
@@ -558,18 +606,26 @@ function renderGrid(r){
     return;
   }
   $('grid').innerHTML = r.map((h,i) => `<article class="card glass" style="--i:${Math.min(i,12)}">
-    <div class="thumb${PHOTOS[h.id]?' has-photo':''}" style="background:${thumbBg(h)}">${photoLayer(h)}<span class="scan"></span><span class="tag">${h.commune}</span>
+    <div class="thumb${PHOTOS[h.id]?' has-photo':''}" style="background:${thumbBg(h)}">${photoLayer(h)}<span class="tag">${h.commune}</span>
       <button class="fav" data-fav="${h.id}" aria-pressed="${S.favs.has(h.id)}" aria-label="Favori : ${esc(h.name)}">${ic('heart')}</button>
       ${PHOTOS[h.id] ? '' : `<span class="ini">${initials(h.name)}</span>`}</div>
     <div class="cbody">
-      <h3 class="cname">${esc(h.name)} ${starTxt(h)}</h3>
-      <div class="addr">${ic('pin')}<span>${esc(h.addr)}</span></div>
-      <div class="tel">${h.tel ? esc(h.tel) : '<span style="color:var(--muted)">Téléphone non trouvé</span>'}</div>
-      <div class="cfoot">
+      <div class="cmain">
+        <h3 class="cname">${esc(h.name)}</h3>
+        <div class="loc"><span>${h.commune}, Abidjan</span>${starTxt(h)}</div>
+        <div class="addr">${ic('pin')}<span>${esc(h.addr)}</span></div>
+        <ul class="feats">
+          ${h.from ? `<li class="f-ok">${ic('check')}Petit-déjeuner inclus dans le tarif</li>` : ''}
+          ${h.ver==='site' ? `<li class="f-ok">${ic('check')}Contact vérifié sur le site officiel</li>` : (h.ver==='liste' ? `<li class="f-ok">${ic('check')}Contact de la liste officielle</li>` : `<li class="f-dir">${ic('info')}Coordonnées d'annuaire, à confirmer</li>`)}
+          ${h.warn ? `<li class="f-dir">${ic('info')}Point à vérifier, voir la fiche</li>` : ''}
+        </ul>
+        <div class="tel">${h.tel ? `${ic('phone').replace('class="i"','class="i" style="width:14px;height:14px;vertical-align:-2px"')} ${esc(h.tel)}` : '<span style="color:var(--muted)">Téléphone non trouvé</span>'}</div>
+      </div>
+      <div class="cside">
         <div class="price">${h.from
-          ? `<span class="badge b-ok">TARIF OFFICIEL</span><small>à partir de</small><b class="num">${fcfa(h.from)}</b><em class="num">${fcfa(h.from*n*S.rooms)} · ${n} nuit${n>1?'s':''}</em>`
-          : `<span class="badge ${h.ver==='site'?'b-ok':'b-dir'}">${h.ver==='site'?'CONTACT VÉRIFIÉ':'ANNUAIRE'}</span><b>Sur demande</b><em>aucun tarif publié</em>`}</div>
-        <button class="go" data-open="${h.id}">Détails ${ic('arrow')}</button>
+          ? `<span class="badge b-ok">Tarif officiel</span><small>à partir de</small><b class="num">${fcfa(h.from)}</b><em>par nuit</em><em class="tot num">${fcfa(h.from*n*S.rooms)} au total</em>`
+          : `<span class="badge b-dir">Sans tarif publié</span><b class="ask">Prix sur demande</b><em>contactez l'hôtel</em>`}</div>
+        <button class="go" data-open="${h.id}">Voir l'hôtel ${ic('arrow')}</button>
       </div>
     </div></article>`).join('');
 }
@@ -614,7 +670,7 @@ function openHotel(id){
       <span class="badge ${h.ver==='site'?'b-ok':'b-dir'}" style="align-self:flex-start">${h.ver ? esc(VER_LABEL[h.ver]).toUpperCase() : 'COORDONNÉES D\'ANNUAIRE, NON CONFIRMÉES'}</span>
       ${h.tel ? contactRow('phone','Téléphone', h.tel, h.telNote) : '<p class="note">Aucun numéro de téléphone trouvé.</p>'}
       ${h.mail ? contactRow('mail','E-mail', h.mail, h.mailNote || (h.mail==='abidjan.reservation@accor.com' ? 'réservation Accor, commune à plusieurs hôtels' : '')) : '<p class="note">Aucune adresse e-mail confirmée trouvée.</p>'}
-      ${h.web ? `<div class="ct">${ic('web')}<div><a class="v" href="${esc(h.web)}" target="_blank" rel="noopener">${esc(h.web.replace(/^https?:\/\//,''))}</a><small>Site web${h.webNote?' · '+esc(h.webNote):''}</small></div><span></span></div>` : (h.webNote ? `<p class="note">${esc(h.webNote)}</p>` : '')}
+      ${h.web ? `<div class="ct">${ic('web')}<div><a class="v" href="${esc(h.web)}" target="_blank" rel="noopener noreferrer">${esc(h.web.replace(/^https?:\/\//,''))}</a><small>Site web${h.webNote?' · '+esc(h.webNote):''}</small></div><span></span></div>` : (h.webNote ? `<p class="note">${esc(h.webNote)}</p>` : '')}
       ${h.alt ? `<p class="note">${esc(h.alt)}</p>` : ''}
       ${h.ver==='site' ? `<p class="note">Vérifié le ${CHECKED}.</p>` : ''}
     </div></div>
@@ -623,7 +679,7 @@ function openHotel(id){
       <div class="total"><span>Estimation au tarif le plus bas<br>${fmtD(S.checkin)} → ${fmtD(S.checkout)} · ${n} nuit${n>1?'s':''} · ${S.rooms} ch.</span><b class="num">${fcfa(h.from*n*S.rooms)}</b></div>`
       : `<div class="warn">Aucun tarif officiel publié. Contactez l'hôtel pour connaître le prix à vos dates.</div>`}
     ${h.warn ? `<div class="warn">${esc(h.warn)}</div>` : ''}
-    ${PHOTOS[h.id] ? `<p class="note">Photo : ${esc(PHOTOS[h.id].credit)}, <a href="${esc(PHOTOS[h.id].url)}" target="_blank" rel="noopener">${esc(PHOTOS[h.id].lic)}</a>, via Wikimedia Commons.</p>` : ''}
+    ${PHOTOS[h.id] ? `<p class="note">Photo : ${esc(PHOTOS[h.id].credit)}, <a href="${esc(PHOTOS[h.id].url)}" target="_blank" rel="noopener noreferrer">${esc(PHOTOS[h.id].lic)}</a>, via Wikimedia Commons.</p>` : ''}
     <p class="note">${h.dir ? `Source initiale : ${esc(h.src)}.${h.ver==='site' ? ' Contact vérifié ensuite sur le site officiel de l\'hôtel.' : ' Coordonnées non confirmées par l\'hôtel.'}` : 'Source : Côte d\'Ivoire Tourisme, liste des hôtels de Cocody, Plateau, Marcory, juin 2026.'} Confirmez prix et disponibilité avant de réserver.</p>`;
   showOverlay($('drawer'));
 }
@@ -643,7 +699,7 @@ function openJoin(){
       <label for="f-last">Nom<input id="f-last" required maxlength="60" autocomplete="family-name" value="${esc(m.lastName)}"></label>
       <label class="full" for="f-mail">E-mail<input id="f-mail" type="email" required maxlength="120" autocomplete="email" placeholder="vous@exemple.com" value="${esc(m.email)}"></label>
       <label for="f-tel">Téléphone<input id="f-tel" type="tel" maxlength="30" autocomplete="tel" placeholder="+225 07 00 00 00 00" value="${esc(m.phone)}"></label>
-      <label for="f-type">Type de séjour<select id="f-type">${['Affaires','Loisirs','Famille','Événement'].map(t=>`<option ${m.purpose===t?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label for="f-type">Type de séjour<select id="f-type">${PURPOSES.map(t=>`<option ${m.purpose===t?'selected':''}>${t}</option>`).join('')}</select></label>
       <label class="check full" for="f-ok"><input id="f-ok" type="checkbox" ${ACC.member?'checked':''}><span>J'accepte que ces informations soient enregistrées pour gérer mon profil Akwaba Hôtels.</span></label>
       <div class="full" id="f-msg" role="alert"></div>
       <div class="full btnrow">
@@ -659,6 +715,8 @@ async function submitJoin(form){
   const data = { firstName:v('f-first'), lastName:v('f-last'), email:v('f-mail'), phone:v('f-tel'), purpose:$('f-type').value };
   const err = t => { msg.innerHTML = `<div class="msg m-err">${esc(t)}</div>`; };
   if (!data.firstName || !data.lastName) return err('Indiquez votre prénom et votre nom.');
+  if (!PURPOSES.includes(data.purpose)) data.purpose = 'Loisirs';
+  Object.entries(MEMBER_FIELDS).forEach(([k,n]) => { if (typeof data[k]==='string') data[k] = data[k].slice(0,n); });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return err('Cette adresse e-mail n\'est pas valide. Exemple : vous@exemple.com');
   if (data.phone && !/^[+\d][\d\s.-]{7,}$/.test(data.phone)) return err('Le numéro de téléphone ne doit contenir que des chiffres, espaces et un + au début.');
   if (!$('f-ok').checked) return err('Cochez la case d\'accord pour créer votre profil.');
@@ -696,7 +754,7 @@ function openMembers(){
     <h2 id="m-title">Inscrits · <span class="num">${rows.length}</span></h2>
     <p class="sub">Visible uniquement par vous, propriétaire du site. Mise à jour en direct.</p>
     ${rows.length ? `<div class="tablebox"><table class="mtable"><thead><tr><th>Nom</th><th>E-mail</th><th>Téléphone</th><th>Séjour</th><th>Inscrit le</th></tr></thead><tbody>
-      ${rows.map(r=>`<tr><td>${esc(r.firstName)} ${esc(r.lastName)}</td><td class="mono">${esc(r.email)}</td><td class="mono">${esc(r.phone)||'—'}</td><td>${esc(r.purpose)}</td><td class="num">${r.createdAt ? new Date(r.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '—'}</td></tr>`).join('')}
+      ${rows.map(r=>`<tr><td>${esc(r.firstName)} ${esc(r.lastName)}</td><td class="mono">${esc(r.email)}</td><td class="mono">${esc(r.phone)||'—'}</td><td>${esc(r.purpose)}</td><td class="num">${isNaN(new Date(r.createdAt)) ? '—' : new Date(r.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</td></tr>`).join('')}
     </tbody></table></div>` : '<div class="empty">Aucune inscription pour l\'instant. Les nouveaux profils apparaîtront ici dès qu\'un visiteur s\'inscrit.</div>'}`;
   if ($('modal').hidden) showOverlay(md);
 }
@@ -707,13 +765,25 @@ $('maxp').addEventListener('input', e => { S.maxPrice = +e.target.value; render(
 $('sort').addEventListener('change', e => { S.sort = e.target.value; render(); });
 $('nav-fav').onclick = () => { S.view = S.view==='fav'?'all':'fav'; render(); $('explorer').scrollIntoView(); };
 $('nav-members').onclick = openMembers;
-$('dates-btn').onclick = () => { $('cal-box').scrollIntoView({block:'center'}); };
+const POPS = ['pop-dates','pop-trav'];
+function togglePop(id){
+  POPS.forEach(p => {
+    const open = p===id && $(p).hidden;
+    $(p).hidden = !open;
+    document.querySelector(`[aria-controls="${p}"]`).setAttribute('aria-expanded', open);
+  });
+}
+$('dates-btn').onclick = () => togglePop('pop-dates');
+$('trav-btn').onclick = () => togglePop('pop-trav');
+$('trav-ok').onclick = () => togglePop(null);
+$('search-go').onclick = () => { togglePop(null); $('explorer').scrollIntoView(); };
+document.addEventListener('click', e => { if (!e.target.closest('.field')) togglePop(null); });
 $('cal-prev').onclick = () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1); renderCal(); };
 $('cal-next').onclick = () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCal(); };
 $('r-minus').onclick = () => { S.rooms = Math.max(1,S.rooms-1); render(); };
 $('r-plus').onclick = () => { S.rooms = Math.min(10,S.rooms+1); render(); };
 $('scrim').onclick = closeAll;
-document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('scrim').hidden) closeAll(); });
+document.addEventListener('keydown', e => { if (e.key!=='Escape') return; if (!$('scrim').hidden) closeAll(); else togglePop(null); });
 document.addEventListener('submit', e => { if (e.target.id==='join-form'){ e.preventDefault(); submitJoin(e.target); } });
 
 document.addEventListener('click', e => {
@@ -735,50 +805,15 @@ document.addEventListener('click', e => {
     const d = new Date(+t.dataset.day);
     if (!S.checkin || S.checkout || d <= S.checkin){ S.checkin = d; S.checkout = null; } else S.checkout = d;
     render();
+    if (S.checkout) setTimeout(() => togglePop(null), 250);
   }
 });
 
-/* ---------- Fond animé : grille en perspective sur la lagune + particules ---------- */
+/* ---------- Bandeau photo (Wikimedia Commons) ---------- */
 (function(){
-  const c = $('bg'), x = c.getContext('2d');
-  let W, H, dpr, pts = [], t = 0, raf = null;
-  function size(){
-    dpr = Math.min(devicePixelRatio||1, 2); W = c.clientWidth; H = c.clientHeight;
-    c.width = W*dpr; c.height = H*dpr; x.setTransform(dpr,0,0,dpr,0,0);
-    pts = Array.from({length: Math.round(Math.min(90, W*H/16000))}, () => ({x:Math.random()*W, y:Math.random()*H*.62, r:Math.random()*1.6+.3, v:Math.random()*.25+.05, h:Math.random()<.5?190:310}));
-  }
-  function frame(){
-    x.clearRect(0,0,W,H);
-    const g = x.createRadialGradient(W*.75,H*.1,0,W*.75,H*.1,W*.7);
-    g.addColorStop(0,'rgba(123,92,255,.22)'); g.addColorStop(1,'rgba(5,6,15,0)');
-    x.fillStyle = g; x.fillRect(0,0,W,H);
-    const g2 = x.createRadialGradient(W*.1,H*.55,0,W*.1,H*.55,W*.5);
-    g2.addColorStop(0,'rgba(255,79,216,.12)'); g2.addColorStop(1,'rgba(5,6,15,0)');
-    x.fillStyle = g2; x.fillRect(0,0,W,H);
-    const hz = H*.66, vx = W/2;
-    x.lineWidth = 1;
-    for (let i=0;i<14;i++){
-      const k = ((i + (t*0.6 % 1)) / 14), y = hz + Math.pow(k,2.2)*(H-hz);
-      x.strokeStyle = `rgba(59,232,255,${0.05 + k*0.22})`;
-      x.beginPath(); x.moveTo(0,y); x.lineTo(W,y); x.stroke();
-    }
-    for (let i=-16;i<=16;i++){
-      x.strokeStyle = 'rgba(123,92,255,.14)';
-      x.beginPath(); x.moveTo(vx + i*8, hz); x.lineTo(vx + i*W/9, H); x.stroke();
-    }
-    const sky = x.createLinearGradient(0,hz-2,0,hz+2); sky.addColorStop(0,'rgba(255,79,216,0)'); sky.addColorStop(.5,'rgba(255,79,216,.55)'); sky.addColorStop(1,'rgba(255,79,216,0)');
-    x.fillStyle = sky; x.fillRect(0,hz-2,W,4);
-    for (const p of pts){
-      p.y -= p.v; if (p.y < 0){ p.y = H*.62; p.x = Math.random()*W; }
-      x.fillStyle = `hsla(${p.h},100%,70%,${.35 + .35*Math.sin(t*2+p.x)})`;
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill();
-    }
-    t += 0.016;
-  }
-  function loop(){ frame(); raf = requestAnimationFrame(loop); }
-  size(); addEventListener('resize', () => { size(); if (reduced) frame(); });
-  if (reduced) frame(); else loop();
-  document.addEventListener('visibilitychange', () => { if (reduced) return; if (document.hidden){ cancelAnimationFrame(raf); raf=null; } else if (!raf) loop(); });
+  const p = PHOTOS[1]; if (!p) return;
+  $('hero').style.backgroundImage = `linear-gradient(90deg,rgba(20,28,60,.85),rgba(20,28,60,.45)),url(${p.img})`;
+  $('hero-credit').innerHTML = `Photo : ${esc(p.credit)}, <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.lic)}</a>`;
 })();
 
 renderCounters();
